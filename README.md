@@ -17,7 +17,30 @@ To write an assembly language program in 8086 to generate Sawtooth and Square wa
 ---
 
 ## ALGORITHM
+## Algorithm – Sawtooth Waveform
 
+1. Start.
+2. Initialize the 8255 PPI with Port A as output.
+3. Load `00H` into register `AL`.
+4. Send the contents of `AL` to the DAC through Port A.
+5. Increment the contents of `AL`.
+6. Repeat steps 4 and 5 until `AL` reaches `FFH`.
+7. Reset `AL` to `00H`.
+8. Repeat the process continuously to generate the sawtooth waveform.
+9. Stop.
+
+## Algorithm – Square Waveform
+
+1. Start.
+2. Initialize the 8255 PPI with Port A as output.
+3. Load `00H` into register `AL`.
+4. Send `00H` to the DAC through Port A.
+5. Introduce a delay.
+6. Load `FFH` into register `AL`.
+7. Send `FFH` to the DAC through Port A.
+8. Introduce a delay.
+9. Repeat steps 3 to 8 continuously to generate the square waveform.
+10. Stop.
 ### Measurement of Analog Voltage
 1. Send the digital value to DAC.  
 2. Read the corresponding analog value at its output.  
@@ -41,8 +64,29 @@ To write an assembly language program in 8086 to generate Sawtooth and Square wa
 ---
 
 ## PROGRAMS
+```
+ORG 1000H
+
+START:  MOV AL,00H
+        OUT 0C8H,AL
+        CALL DELAY
+
+        MOV AL,0FFH
+        OUT 0C8H,AL
+        CALL DELAY
+
+        JMP START
+
+DELAY: MOV CX,0505H
+L1:    DEC CX
+       JNZ L1
+       RET
+
+END
+```
 
 # 8086 Assembly Programs – DAC Interfacing
+ 
 
 ## Program: Square Wave
 
@@ -65,6 +109,16 @@ To write an assembly language program in 8086 to generate Sawtooth and Square wa
 
 
 # Program: Sawtooth wave
+ORG 1000H
+
+START: MOV AL,00H
+
+LOOP1: OUT 0C8H,AL
+       INC AL
+       JNC LOOP1
+       JMP START
+
+END
 
 ## Assembly Program
 
@@ -88,13 +142,25 @@ To write an assembly language program in 8086 to generate Sawtooth and Square wa
 
 ## Model Graph
 
-*(Insert graph/diagram here if available)*
+
+<img width="1523" height="860" alt="image" src="https://github.com/user-attachments/assets/28fa41ff-8dc2-46ad-9d6d-df99bd2468f2" />
+
 
 
 
 ## OUTPUT IMAGE OF DAC(SAWTOOTH WAVE FROM DSO AND SQUARE WAVE FROM DSO)
 
-
+**Voltage
+  5V  ┌──────┐      ┌──────┐      ┌──────┐
+      │      │      │      │      │      │
+  0V  └──────┴──────┘      └──────┴──────┘
+          Time →**
+Voltage
+  5V       /|       /|       /|
+          / |      / |      / |
+         /  |     /  |     /  |
+  0V  ──/   └────/   └────/   └──
+          Time →
 
 
 ## Result
